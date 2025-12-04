@@ -1,0 +1,98 @@
+# Campus Connect – MVP Spec
+
+## 1. One-line description
+Campus Connect is a college-only social app with exclusive email login, anonymous confessions, a “tea” gossip feed, and a campus bulletin for useful updates.
+
+## 2. User types
+- Student (main user)
+- Faculty (optional, uses bulletin mostly)
+
+## 3. Features in MVP
+
+1. Auth (.edu only)
+   - Signup with college email + password
+   - Login
+   - View own profile
+
+2. Profile
+   - Fields: name, email, branch, year, bio, relationship_status
+   - Edit profile
+
+3. Anonymous Confessions
+   - Post anonymous text confession
+   - See confessions feed (most recent)
+   - Upvote confessions
+
+4. Tea Section (Anonymous Gossip)
+   - Post anonymous “tea” text
+   - See tea feed (most recent)
+   - Upvote tea posts
+
+5. Campus Bulletin (Named Posts)
+   - Post bulletin (title + content, not anonymous)
+   - See bulletin feed (latest posts)
+
+6. Search Users
+   - Search by name
+   - Result shows name, branch, year, bio (no email)
+
+## 4. Screens
+
+1. Login / Signup
+2. Home (tabs or buttons to: Confessions, Tea, Bulletin)
+3. Confessions Feed + Create Confession
+4. Tea Feed + Create Tea Post
+5. Bulletin Feed + Create Bulletin
+6. My Profile + Edit Profile
+7. Search Users
+
+## 5. Database (simplified)
+
+### users
+- id
+- name
+- email
+- password_hash
+- branch
+- year
+- bio
+- relationship_status
+- created_at
+
+### anonymous_posts
+- id
+- user_id
+- type (`confession` or `tea`)
+- content
+- upvotes
+- created_at
+
+### bulletin_posts
+- id
+- user_id
+- title
+- content
+- created_at
+
+## 6. APIs (basic)
+
+### Auth
+- POST /api/auth/register
+- POST /api/auth/login
+- GET /api/auth/me
+
+### Users
+- GET /api/users/me
+- PUT /api/users/me
+- GET /api/users?search=query
+
+### Anonymous posts
+- GET /api/anon?type=confession
+- GET /api/anon?type=tea
+- POST /api/anon  (body: { type, content })
+- POST /api/anon/:id/upvote
+
+### Bulletin
+- GET /api/bulletin
+- POST /api/bulletin
+- GET /api/bulletin/:id
