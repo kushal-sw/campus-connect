@@ -1,20 +1,14 @@
-// Home Page
-
-import { useNavigate } from "react-router-dom";
-
-function Home() {
-  const navigate = useNavigate();
+export default function Home() {
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
 
   return (
-    <div>
-      <h1>Campus Connect</h1>
-      <button onClick={() => navigate("/confessions")}>Confessions</button>
-      <button onClick={() => navigate("/tea")}>Tea</button>
-      <button onClick={() => navigate("/bulletin")}>Campus Bulletin</button>
-      <button onClick={() => navigate("/profile")}>My Profile</button>
-      <button onClick={() => navigate("/search")}>Search Users</button>
+    <div style={{ maxWidth: "600px", margin: "40px auto" }}>
+      <h1>Campus Connect – Home</h1>
+      <p>You are logged in. This will later become your hub (Confessions / Tea / Bulletin).</p>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }
-
-export default Home;

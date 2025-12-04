@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/apiClient";
 
-function Login() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,7 +15,7 @@ function Login() {
     try {
       const res = await api.post("/auth/login", { email, password });
 
-      // backend is currently returning { user, token }
+      // backend currently sends { user, token }
       const token = res.data.token;
       if (!token) {
         setError("No token received from server");
@@ -58,5 +58,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;
