@@ -14,9 +14,8 @@ export default function Login() {
 
     try {
       const res = await api.post("/auth/login", { email, password });
-
-      // backend currently sends { user, token }
       const token = res.data.token;
+
       if (!token) {
         setError("No token received from server");
         return;
