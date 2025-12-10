@@ -9,6 +9,7 @@ export default function Tea() {
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState("");
 
+  // fetch all tea
   const fetchTea = async () => {
     try {
       setLoading(true);
@@ -34,66 +35,125 @@ export default function Tea() {
     setError("");
 
     try {
-      await api.post("/anon", { type: "tea", content });
+      await api.post("/anon", {
+        type: "tea",
+        content,
+      });
       setContent("");
       fetchTea();
     } catch (err) {
       console.error(err);
-      setError("Failed to spill tea");
+      setError("Failed to post tea");
     } finally {
       setPosting(false);
     }
   };
 
   return (
-    <div className="page-container">
-      <h2 className="page-title">Tea / Gossip Feed</h2>
-      <p className="page-subtitle">What's buzzing on campus? Spill it here.</p>
+    <div className="page-wrapper">
+      <div className="feature-card">
+        <h2 className="feature-title pink">Tea / Gossip Feed</h2>
+        <p className="feature-description" style={{ marginBottom: "16px" }}>
+          Spill the campus tea. All gossip, no names.
+        </p>
 
-      <div className="card" style={{ marginBottom: "32px" }}>
-        <form onSubmit={handleSubmit}>
+        {/* Post form */}
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+        >
           <textarea
-            className="textarea"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Spill some campus tea..."
-            rows={4}
-            style={{ marginBottom: "16px" }}
+            placeholder="What's the latest drama?"
+            rows={3}
+            style={{
+              width: "100%",
+              borderRadius: "14px",
+              border: "1px solid #4b5563",
+              background: "#020617",
+              color: "#e5e7eb",
+              padding: "10px 12px",
+              fontSize: "14px",
+              resize: "vertical",
+              outline: "none",
+            }}
           />
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button type="submit" className="btn-primary" disabled={posting}>
-              {posting ? "Posting..." : "Post Tea"}
-            </button>
-          </div>
-        </form>
-        {error && <p style={{ color: "#ef4444", marginTop: "12px", fontSize: "14px" }}>{error}</p>}
-      </div>
 
-      {loading ? (
-        <p style={{ textAlign: "center", color: "var(--text-muted)" }}>Loading tea...</p>
-      ) : (
-        <ul className="feed-list">
-          {teaPosts.map((t) => (
-            <li key={t.id} className="feed-item">
-              <p style={{ fontSize: "16px", lineHeight: "1.6" }}>{t.content}</p>
-              <div className="feed-meta">
-                <span>Anonymous</span>
-                <span>•</span>
-                <span>
-                  {t.created_at || t.createdAt
-                    ? new Date(t.created_at || t.createdAt).toLocaleString()
-                    : "Just now"}
-                </span>
-              </div>
-            </li>
-          ))}
-          {teaPosts.length === 0 && (
-            <p style={{ textAlign: "center", color: "var(--text-muted)", marginTop: "40px" }}>
-              No tea yet. Campus is too quiet.
-            </p>
+          {error && (
+            <p style={{ fontSize: "12px", color: "#fca5a5" }}>{error}</p>
           )}
-        </ul>
-      )}
+
+          <button
+            type="submit"
+            disabled={posting}
+            style={{
+              alignSelf: "flex-end",
+              border: "none",
+              borderRadius: "999px",
+              background: "linear-gradient(90deg, #ec4899, #6366f1)",
+              color: "white",
+              padding: "6px 16px",
+              fontSize: "13px",
+              fontWeight: 500,
+              cursor: posting ? "default" : "pointer",
+              opacity: posting ? 0.7 : 1,
+              boxShadow: "0 14px 35px rgba(190,24,93,0.6)",
+            }}
+          >
+            {posting ? "Spilling..." : "Post tea"}
+          </button>
+        </form>
+
+        {/* Tea list */}
+        <div style={{ marginTop: "20px" }}>
+          {loading ? (
+            <p className="feature-description">Loading tea...</p>
+          ) : teaPosts.length === 0 ? (
+            <p className="feature-description">
+              No tea yet. Campus is suspiciously quiet.
+            </p>
+          ) : (
+            teaPosts
+              .slice()
+              .reverse()
+              .map((t) => {
+                const created = t.created_at || t.createdAt;
+                const formattedDate = created
+                  ? new Date(created).toLocaleString()
+                  : "Just now";
+
+                return (
+                  <div
+                    key={t.id}
+                    className="feature-card"
+                    style={{
+                      marginBottom: "10px",
+                      boxShadow: "none",
+                      background: "rgba(15,23,42,0.95)",
+                    }}
+                  >
+                    <p
+                      className="feature-description"
+                      style={{ color: "#e5e7eb", fontSize: "14px" }}
+                    >
+                      {t.content}
+                    </p>
+                    <div
+                      style={{
+                        marginTop: "6px",
+                        fontSize: "11px",
+                        color: "#9ca3af",
+                      }}
+                    >
+                      Anonymous • {formattedDate}
+                    </div>
+                  </div>
+                );
+              })
+          )}
+        </div>
+      </div>
     </div>
   );
 }

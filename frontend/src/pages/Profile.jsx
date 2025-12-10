@@ -76,89 +76,335 @@ export default function Profile() {
     }
   };
 
-  if (loading) return <p style={{ textAlign: "center", marginTop: "40px", color: "var(--text-muted)" }}>Loading profile...</p>;
+  if (loading)
+    return (
+      <div className="page-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
+        <div
+          className="feature-card"
+          style={{
+            maxWidth: "360px",
+            width: "100%",
+            textAlign: "center",
+            padding: "18px 18px 20px",
+          }}
+        >
+          <p className="feature-description">Loading profile...</p>
+        </div>
+      </div>
+    );
 
   return (
-    <div className="page-container">
-      <h2 className="page-title">My Profile</h2>
-      <p className="page-subtitle">Manage your personal information.</p>
-
-      <div className="card" style={{ maxWidth: "600px", margin: "0 auto" }}>
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <div className="page-wrapper">
+      <div
+        className="feature-card"
+        style={{ maxWidth: "720px", margin: "0 auto" }}
+      >
+        {/* Header with avatar and basic info */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "14px",
+            marginBottom: "18px",
+          }}
+        >
+          <div
+            style={{
+              height: "52px",
+              width: "52px",
+              borderRadius: "999px",
+              background:
+                "linear-gradient(135deg, #6366f1, #ec4899)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "22px",
+              fontWeight: 600,
+              color: "white",
+            }}
+          >
+            {(form.name || form.email || "?")
+              .charAt(0)
+              .toUpperCase()}
+          </div>
           <div>
-            <label style={{ display: "block", marginBottom: "8px", color: "var(--text-muted)", fontSize: "14px" }}>Name</label>
+            <h2
+              className="feature-title sky"
+              style={{ marginBottom: "2px" }}
+            >
+              {form.name || "Your Name"}
+            </h2>
+            <p
+              className="feature-description"
+              style={{ fontSize: "12px" }}
+            >
+              {form.email || "your@college.edu"}
+            </p>
+          </div>
+        </div>
+
+        <p
+          className="feature-description"
+          style={{ marginBottom: "16px" }}
+        >
+          Manage how you appear across Campus Connect. This is visible to
+          other students in search and around the app.
+        </p>
+
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          {/* Name */}
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "6px",
+                color: "#9ca3af",
+                fontSize: "13px",
+              }}
+            >
+              Name
+            </label>
             <input
               className="input"
               name="name"
               value={form.name}
               onChange={handleChange}
+              style={{
+                width: "100%",
+                borderRadius: "999px",
+                border: "1px solid #4b5563",
+                background: "#020617",
+                color: "#e5e7eb",
+                padding: "8px 12px",
+                fontSize: "14px",
+                outline: "none",
+              }}
             />
           </div>
 
+          {/* Email */}
           <div>
-            <label style={{ display: "block", marginBottom: "8px", color: "var(--text-muted)", fontSize: "14px" }}>Email (read-only)</label>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "6px",
+                color: "#9ca3af",
+                fontSize: "13px",
+              }}
+            >
+              Email (read-only)
+            </label>
             <input
               className="input"
               value={form.email}
               readOnly
-              style={{ opacity: 0.6, cursor: "not-allowed" }}
+              style={{
+                width: "100%",
+                borderRadius: "999px",
+                border: "1px solid #4b5563",
+                background: "#020617",
+                color: "#e5e7eb",
+                padding: "8px 12px",
+                fontSize: "14px",
+                opacity: 0.6,
+                cursor: "not-allowed",
+              }}
             />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+          {/* Branch + Year */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "16px",
+            }}
+          >
             <div>
-              <label style={{ display: "block", marginBottom: "8px", color: "var(--text-muted)", fontSize: "14px" }}>Branch</label>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "6px",
+                  color: "#9ca3af",
+                  fontSize: "13px",
+                }}
+              >
+                Branch
+              </label>
               <input
                 className="input"
                 name="branch"
                 value={form.branch}
                 onChange={handleChange}
+                style={{
+                  width: "100%",
+                  borderRadius: "999px",
+                  border: "1px solid #4b5563",
+                  background: "#020617",
+                  color: "#e5e7eb",
+                  padding: "8px 12px",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", marginBottom: "8px", color: "var(--text-muted)", fontSize: "14px" }}>Year</label>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "6px",
+                  color: "#9ca3af",
+                  fontSize: "13px",
+                }}
+              >
+                Year
+              </label>
               <input
                 className="input"
                 name="year"
+                type="number"
                 value={form.year}
                 onChange={handleChange}
-                type="number"
+                style={{
+                  width: "100%",
+                  borderRadius: "999px",
+                  border: "1px solid #4b5563",
+                  background: "#020617",
+                  color: "#e5e7eb",
+                  padding: "8px 12px",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               />
             </div>
           </div>
 
+          {/* Bio */}
           <div>
-            <label style={{ display: "block", marginBottom: "8px", color: "var(--text-muted)", fontSize: "14px" }}>Bio</label>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "6px",
+                color: "#9ca3af",
+                fontSize: "13px",
+              }}
+            >
+              Bio
+            </label>
             <textarea
               className="textarea"
               name="bio"
               value={form.bio}
               onChange={handleChange}
               rows={3}
+              style={{
+                width: "100%",
+                borderRadius: "14px",
+                border: "1px solid #4b5563",
+                background: "#020617",
+                color: "#e5e7eb",
+                padding: "10px 12px",
+                fontSize: "14px",
+                resize: "vertical",
+                outline: "none",
+              }}
             />
           </div>
 
+          {/* Relationship status */}
           <div>
-            <label style={{ display: "block", marginBottom: "8px", color: "var(--text-muted)", fontSize: "14px" }}>Relationship Status</label>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "6px",
+                color: "#9ca3af",
+                fontSize: "13px",
+              }}
+            >
+              Relationship Status
+            </label>
             <input
               className="input"
               name="relationship_status"
               value={form.relationship_status}
               onChange={handleChange}
               placeholder="single / taken / it's complicated"
+              style={{
+                width: "100%",
+                borderRadius: "999px",
+                border: "1px solid #4b5563",
+                background: "#020617",
+                color: "#e5e7eb",
+                padding: "8px 12px",
+                fontSize: "14px",
+                outline: "none",
+              }}
             />
           </div>
 
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "12px" }}>
-            <button type="submit" className="btn-primary" disabled={saving}>
+          {/* Save button & messages */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "10px",
+            }}
+          >
+            <button
+              type="submit"
+              className="btn-primary"
+              disabled={saving}
+              style={{
+                border: "none",
+                borderRadius: "999px",
+                background:
+                  "linear-gradient(90deg, #6366f1, #ec4899)",
+                color: "white",
+                padding: "8px 18px",
+                fontSize: "14px",
+                fontWeight: 500,
+                cursor: saving ? "default" : "pointer",
+                opacity: saving ? 0.7 : 1,
+                boxShadow: "0 14px 35px rgba(88,28,135,0.65)",
+              }}
+            >
               {saving ? "Saving..." : "Save Profile"}
             </button>
           </div>
         </form>
 
-        {message && <p style={{ color: "#4ade80", marginTop: "16px", textAlign: "center", fontSize: "14px" }}>{message}</p>}
-        {error && <p style={{ color: "#ef4444", marginTop: "16px", textAlign: "center", fontSize: "14px" }}>{error}</p>}
+        {message && (
+          <p
+            style={{
+              color: "#4ade80",
+              marginTop: "14px",
+              textAlign: "center",
+              fontSize: "13px",
+            }}
+          >
+            {message}
+          </p>
+        )}
+        {error && (
+          <p
+            style={{
+              color: "#ef4444",
+              marginTop: "14px",
+              textAlign: "center",
+              fontSize: "13px",
+            }}
+          >
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,31 +1,27 @@
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+const jwt = require("jsonwebtoken");
 
-const prisma = new PrismaClient();
+module.exports = (req, res, next) => {
+  const authHeader =
+    req.headers.authorization || req.headers.Authorization || "";
 
-const authMiddleware = async (req, res, next) => {
-    try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
+  console.log("AUTH HEADER:", authHeader); // 👈 TEMPORARY FOR DEBUG
 
-        if (!token) {
-            return res.status(401).json({ message: 'Authentication required' });
-        }
+  if (!authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Please authenticate" });
+  }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await prisma.user.findUnique({
-            where: { id: decoded.id },
-        });
+  const token = authHeader.split(" ")[1];
 
-        if (!user) {
-            throw new Error();
-        }
+  if (!token) {
+    return res.status(401).json({ message: "Please authenticate" });
+  }
 
-        req.user = user;
-        req.token = token;
-        next();
-    } catch (error) {
-        res.status(401).json({ message: 'Please authenticate' });
-    }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded.id };
+    next();
+  } catch (err) {
+    console.error("JWT verify failed:", err.message);
+    return res.status(401).json({ message: "Please authenticate" });
+  }
 };
-
-module.exports = authMiddleware;

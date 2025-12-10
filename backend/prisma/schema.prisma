@@ -1,5 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// ------------------------------
+// Prisma Generator + Datasource
+// ------------------------------
 
 generator client {
   provider = "prisma-client-js"
@@ -10,43 +11,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                Int      @id @default(autoincrement())
-  name              String
-  email             String   @unique
-  password_hash     String
-  branch            String?
-  year              Int?
-  bio               String?
-  relationship_status String?
-  created_at        DateTime @default(now())
+// ------------------------------
+// User Model
+// ------------------------------
 
-  anonymousPosts    AnonymousPost[]
-  bulletinPosts     BulletinPost[]
-  upvotes           Upvote[]
+model User {
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  password_hash  String
+
+  branch               String?
+  year                 Int?
+  bio                  String?
+  relationship_status  String?
+
+  // OTP + Verification
+  isVerified    Boolean   @default(false)
+  otpCode       String?
+  otpExpiresAt  DateTime?
+
+  created_at    DateTime @default(now())
+
+  // Relations
+  anonymousPosts AnonymousPost[]
+  bulletinPosts  BulletinPost[]
+  upvotes        Upvote[]
 }
+
+// ------------------------------
+// Anonymous Posts (Confessions & Tea)
+// ------------------------------
 
 model AnonymousPost {
-  id        Int      @id @default(autoincrement())
-  user_id   Int
-  type      PostType
-  content   String
-  upvotes   Int      @default(0)
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  type       PostType
+  content    String
+  upvotes    Int      @default(0)
   created_at DateTime @default(now())
 
-  user      User     @relation(fields: [user_id], references: [id])
-  upvotedBy Upvote[]
+  user       User     @relation(fields: [user_id], references: [id])
+  upvotedBy  Upvote[]
 }
+
+// ------------------------------
+// Bulletin Board
+// ------------------------------
 
 model BulletinPost {
-  id        Int      @id @default(autoincrement())
-  user_id   Int
-  title     String
-  content   String
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  title      String
+  content    String
   created_at DateTime @default(now())
 
-  user      User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id])
 }
+
+// ------------------------------
+// Upvotes
+// ------------------------------
 
 model Upvote {
   id        Int      @id @default(autoincrement())
@@ -59,7 +84,32 @@ model Upvote {
   @@unique([user_id, post_id])
 }
 
+// ------------------------------
+// Post Types
+// ------------------------------
+
 enum PostType {
   CONFESSION
   TEA
+}
+
+// ------------------------------
+// Confession + Replies Feature
+// ------------------------------
+
+model Confession {
+  id         Int                @id @default(autoincrement())
+  content    String
+  createdAt  DateTime           @default(now())
+
+  replies    ConfessionReply[]
+}
+
+model ConfessionReply {
+  id            Int        @id @default(autoincrement())
+  content       String
+  createdAt     DateTime   @default(now())
+
+  confessionId  Int
+  confession    Confession @relation(fields: [confessionId], references: [id])
 }

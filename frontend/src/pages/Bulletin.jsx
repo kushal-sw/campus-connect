@@ -48,62 +48,135 @@ export default function Bulletin() {
   };
 
   return (
-    <div className="page-container">
-      <h2 className="page-title">Campus Bulletin</h2>
-      <p className="page-subtitle">Official announcements and important notices.</p>
+    <div className="page-wrapper">
+      <div className="feature-card">
+        <h2 className="feature-title emerald">Campus Bulletin</h2>
+        <p className="feature-description" style={{ marginBottom: "16px" }}>
+          Official announcements, events, and campus-wide updates.
+        </p>
 
-      <div className="card" style={{ marginBottom: "32px" }}>
-        <form onSubmit={handleSubmit}>
+        {/* New bulletin form */}
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+        >
           <input
-            className="input"
-            placeholder="Title"
+            type="text"
+            placeholder="Title (e.g. Tech Fest registrations open)"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={{ marginBottom: "16px" }}
+            style={{
+              width: "100%",
+              borderRadius: "999px",
+              border: "1px solid #4b5563",
+              background: "#020617",
+              color: "#e5e7eb",
+              padding: "8px 12px",
+              fontSize: "14px",
+              outline: "none",
+            }}
           />
+
           <textarea
-            className="textarea"
-            placeholder="What's happening?"
+            placeholder="Details of the announcement..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            rows={4}
-            style={{ marginBottom: "16px" }}
+            rows={3}
+            style={{
+              width: "100%",
+              borderRadius: "14px",
+              border: "1px solid #4b5563",
+              background: "#020617",
+              color: "#e5e7eb",
+              padding: "10px 12px",
+              fontSize: "14px",
+              resize: "vertical",
+              outline: "none",
+            }}
           />
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button type="submit" className="btn-primary" disabled={posting}>
-              {posting ? "Posting..." : "Post to Bulletin"}
-            </button>
-          </div>
-        </form>
-        {error && <p style={{ color: "#ef4444", marginTop: "12px", fontSize: "14px" }}>{error}</p>}
-      </div>
 
-      {loading ? (
-        <p style={{ textAlign: "center", color: "var(--text-muted)" }}>Loading bulletin...</p>
-      ) : (
-        <ul className="feed-list">
-          {posts.map((p) => (
-            <li key={p.id} className="feed-item">
-              <h3 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px", color: "var(--text-main)" }}>
-                {p.title}
-              </h3>
-              <p style={{ fontSize: "15px", lineHeight: "1.6", color: "var(--text-muted)" }}>{p.content}</p>
-              <div className="feed-meta" style={{ marginTop: "12px" }}>
-                <span>
-                  {p.created_at || p.createdAt
-                    ? new Date(p.created_at || p.createdAt).toLocaleString()
-                    : "Just now"}
-                </span>
-              </div>
-            </li>
-          ))}
-          {posts.length === 0 && (
-            <p style={{ textAlign: "center", color: "var(--text-muted)", marginTop: "40px" }}>
-              No bulletin posts yet.
-            </p>
+          {error && (
+            <p style={{ fontSize: "12px", color: "#fca5a5" }}>{error}</p>
           )}
-        </ul>
-      )}
+
+          <button
+            type="submit"
+            disabled={posting}
+            style={{
+              alignSelf: "flex-end",
+              border: "none",
+              borderRadius: "999px",
+              background: "linear-gradient(90deg, #22c55e, #22d3ee)",
+              color: "white",
+              padding: "6px 16px",
+              fontSize: "13px",
+              fontWeight: 500,
+              cursor: posting ? "default" : "pointer",
+              opacity: posting ? 0.7 : 1,
+              boxShadow: "0 14px 35px rgba(16,185,129,0.55)",
+            }}
+          >
+            {posting ? "Posting..." : "Post announcement"}
+          </button>
+        </form>
+
+        {/* Bulletin list */}
+        <div style={{ marginTop: "20px" }}>
+          {loading ? (
+            <p className="feature-description">Loading announcements...</p>
+          ) : posts.length === 0 ? (
+            <p className="feature-description">No announcements yet.</p>
+          ) : (
+            posts
+              .slice()
+              .reverse()
+              .map((p) => {
+                const created = p.created_at || p.createdAt;
+                const formattedDate = created
+                  ? new Date(created).toLocaleString()
+                  : "Just now";
+
+                return (
+                  <div
+                    key={p.id}
+                    className="feature-card"
+                    style={{
+                      marginBottom: "10px",
+                      boxShadow: "none",
+                      background: "rgba(15,23,42,0.95)",
+                    }}
+                  >
+                    <h3
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: 600,
+                        color: "#bbf7d0",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {p.title}
+                    </h3>
+                    <p
+                      className="feature-description"
+                      style={{ color: "#e5e7eb", fontSize: "14px" }}
+                    >
+                      {p.content}
+                    </p>
+                    <div
+                      style={{
+                        marginTop: "6px",
+                        fontSize: "11px",
+                        color: "#9ca3af",
+                      }}
+                    >
+                      Posted • {formattedDate}
+                    </div>
+                  </div>
+                );
+              })
+          )}
+        </div>
+      </div>
     </div>
   );
 }
