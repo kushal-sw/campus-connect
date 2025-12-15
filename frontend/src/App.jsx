@@ -1,4 +1,13 @@
+// import DarkVeil from "./components/DarkVeil";
+
+// // inside render
+// <>
+//   <DarkVeil particleCount={28} speed={0.25} opacity={0.95} />
+//   <YourHeader />
+//   <main> ... rest of your UI ... </main>
+
 import Signup from "./pages/Signup";
+
 import Landing from "./pages/Landing";
 
 import {

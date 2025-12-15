@@ -1,0 +1,19 @@
+/* src/components/DarkVeil.css */
+.darkveil-root {
+  position: fixed;     /* full-screen background */
+  inset: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+}
+
+.darkveil-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: saturate(1.05) contrast(1.02);
+  transform: translateZ(0);
+  will-change: transform;
+}

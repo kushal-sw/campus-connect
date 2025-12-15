@@ -17,8 +17,8 @@ export default function CampusConnectLanding() {
         }
         
         @keyframes orbit {
-          0% { transform: rotate(0deg) translateX(280px) rotate(0deg); }
-          100% { transform: rotate(360deg) translateX(280px) rotate(-360deg); }
+          0% { transform: rotate(0deg) translateX(230px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(230px) rotate(-360deg); }
         }
         
         .pulse-animation {
@@ -181,7 +181,7 @@ export default function CampusConnectLanding() {
           <div style={{
             flex: 1,
             maxWidth: '580px',
-            paddingTop: '80px'
+            paddingTop: '100px'
           }}>
             <p style={{
               fontSize: '0.95rem',
@@ -332,19 +332,20 @@ export default function CampusConnectLanding() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: '650px'
+            minHeight: '600px',
+            paddingTop: '100px'
           }}>
             <div style={{
               position: 'relative',
-              width: '650px',
-              height: '650px'
+              width: '500px',
+              height: '500px'
             }}>
               {/* Top Badge - Floating */}
               <div className="float-animation-1" style={{
                 position: 'absolute',
-                top: '0px',
+                top: '-40px',
                 left: '50%',
-                transform: 'translateX(-50%)',
+                transform: 'translate(-50%, 0%)',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white',
                 padding: '0.6rem 1.3rem',
@@ -412,8 +413,8 @@ export default function CampusConnectLanding() {
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: '440px',
-                height: '440px',
+                width: '380px',
+                height: '380px',
                 borderRadius: '50%',
                 border: '1px dashed rgba(255, 255, 255, 0.2)'
               }}></div>
@@ -422,8 +423,8 @@ export default function CampusConnectLanding() {
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: '560px',
-                height: '560px',
+                width: '460px',
+                height: '460px',
                 borderRadius: '50%',
                 border: '1px dashed rgba(255, 255, 255, 0.15)'
               }}></div>

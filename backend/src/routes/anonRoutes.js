@@ -32,21 +32,67 @@ router.get('/', authMiddleware, async (req, res) => {
     }
 });
 
-// Create post
+// Create post (robust, connect via foreign key user_id)
 router.post('/', authMiddleware, async (req, res) => {
-    const { type, content } = req.body;
+  const { type, content } = req.body ?? {};
+
+  // Basic validation
+  if (!type || !content || typeof content !== 'string') {
+    return res.status(400).json({ message: 'type and content are required' });
+  }
+
+  const normalizedType = String(type).trim().toUpperCase();
+
+  // Debug: log req.user to verify middleware
+  console.log('REQ USER in anon POST:', req.user);
+
+  // Try to extract user id from middleware or token fallback
+  let uid = req.user?.id ?? req.user?.userId ?? null;
+
+  if (!uid) {
+    // fallback: try to parse from Authorization token directly
     try {
-        const post = await prisma.anonymousPost.create({
-            data: {
-                type: type.toUpperCase(),
-                content,
-                user_id: req.user.id,
-            },
-        });
-        res.status(201).json(post);
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to create post', error: error.message });
+      const authHeader = req.headers.authorization || '';
+      const token = authHeader.split(' ')[1];
+      if (token) {
+        const payload = require('jsonwebtoken').verify(token, process.env.JWT_SECRET);
+        uid = payload?.id ?? payload?.userId ?? null;
+      }
+    } catch (e) {
+      console.warn('anonRoutes: token parse fallback failed', e.message);
     }
+  }
+
+  // normalize numeric id
+  let idNum = null;
+  if (uid) {
+    idNum = Number(uid);
+    if (Number.isNaN(idNum)) idNum = null;
+  }
+
+  const data = {
+    type: normalizedType,
+    content: content.trim(),
+  };
+
+  // If we have a numeric user id, set the foreign key directly (user_id)
+  if (idNum) {
+    data.user_id = idNum;
+  }
+
+  try {
+    const post = await prisma.anonymousPost.create({ data });
+    return res.status(201).json({ message: 'Post created', post });
+  } catch (err) {
+    console.error('Failed to create anon post:', err);
+    if (err?.name === 'PrismaClientValidationError' && /Argument `user` is missing/.test(String(err))) {
+      return res.status(400).json({
+        message: 'Failed to create post',
+        error: 'Post creation requires a user relationship. Either authenticate or make anonymousPost.user optional in Prisma schema or use user_id foreign key.',
+      });
+    }
+    return res.status(400).json({ message: 'Failed to create post', error: String(err) });
+  }
 });
 
 // Upvote post
